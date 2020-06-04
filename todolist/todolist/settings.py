@@ -10,8 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
-
+import os, json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,7 +42,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -131,3 +131,18 @@ AUTHENTICATION_BACKENDS = (
 )
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+# AWS 설정
+with open(os.path.join(BASE_DIR, 'todolist/config/index.json')) as f:
+    secrets = json.loads(f.read())
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = secrets['AWS']['AWS_ACCESS_KEY']
+AWS_SECRET_ACCESS_KEY = secrets['AWS']['SECTRE_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = secrets['AWS']['STORAGE_BUCKET_NAME']
+AWS_S3_REGION_NAME = 'ap-northeast-2'
+AWS_S3_FILE_OVERWRITE = False
